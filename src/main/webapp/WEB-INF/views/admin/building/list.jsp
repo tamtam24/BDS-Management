@@ -271,10 +271,10 @@
                                     <td>${item.managerName}</td>
                                     <td>${item.managerPhone}</td>
                                     <td>${item.floorArea}</td>
-
+                                    <td>null</td>
                                     <td>${item.rentArea}</td>
                                     <td>${item.brokerageFee}</td>
-                                    <td>${item.id}</td>
+                                    <%--<td>${item.id}</td>--%>
 
                                     <td>
                                         <div class="hidden-sm hidden-xs btn-group">
