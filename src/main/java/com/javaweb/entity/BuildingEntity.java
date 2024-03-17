@@ -113,26 +113,15 @@ public class BuildingEntity {
     private List<RentAreaEntity>items = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "building",fetch = FetchType.LAZY)
-    private  List<AssignmentBuildingEntity>assignmentBuildingEntities=new ArrayList<>();
+//    @OneToMany(mappedBy = "building",fetch = FetchType.LAZY)
+//    private  List<AssignmentBuildingEntity>assignmentBuildingEntities=new ArrayList<>();
 
 
-
-
-
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "assignmentbuilding",
-//            joinColumns = @JoinColumn(name = "buildingid", nullable = false),
-//            inverseJoinColumns = @JoinColumn(name = "staffid", nullable = false))
-//    private List<UserEntity> userEntities = new ArrayList<>();
-
-    public List<RentAreaEntity> getItems() {
-        return items;
-    }
-
-    public void setItems(List<RentAreaEntity> items) {
-        this.items = items;
-    }
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "assignmentbuilding",
+            joinColumns = @JoinColumn(name = "buildingid", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "staffid", nullable = false))
+    private List<UserEntity> userEntities = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -162,16 +151,16 @@ public class BuildingEntity {
         return ward;
     }
 
+    public void setWard(String ward) {
+        this.ward = ward;
+    }
+
     public String getDistrict() {
         return district;
     }
 
     public void setDistrict(String district) {
         this.district = district;
-    }
-
-    public void setWard(String ward) {
-        this.ward = ward;
     }
 
     public String getStructure() {
@@ -246,12 +235,12 @@ public class BuildingEntity {
         this.carfee = carfee;
     }
 
-    public String getMotorbikefee() {
+    public String getMotofee() {
         return motofee;
     }
 
-    public void setMotorbikefee(String motorbikefee) {
-        this.motofee = motorbikefee;
+    public void setMotofee(String motofee) {
+        this.motofee = motofee;
     }
 
     public String getOvertimefee() {
@@ -318,54 +307,6 @@ public class BuildingEntity {
         this.note = note;
     }
 
-    public Date getCreateddate() {
-        return createddate;
-    }
-
-    public void setCreateddate(Date createddate) {
-        this.createddate = createddate;
-    }
-
-    public String getManagername() {
-        return managername;
-    }
-
-    public void setManagername(String managername) {
-        this.managername = managername;
-    }
-
-    public String getManagerphonenumber() {
-        return managerphone;
-    }
-
-    public void setManagerphonenumber(String managerphonenumber) {
-        this.managerphone = managerphonenumber;
-    }
-
-//    public List<UserEntity> getUserEntities() {
-//        return userEntities;
-//    }
-//
-//    public void setUserEntities(List<UserEntity> userEntities) {
-//        this.userEntities = userEntities;
-//    }
-
-    public List<AssignmentBuildingEntity> getAssignmentBuildingEntities() {
-        return assignmentBuildingEntities;
-    }
-
-    public void setAssignmentBuildingEntities(List<AssignmentBuildingEntity> assignmentBuildingEntities) {
-        this.assignmentBuildingEntities = assignmentBuildingEntities;
-    }
-
-    public String getMotofee() {
-        return motofee;
-    }
-
-    public void setMotofee(String motofee) {
-        this.motofee = motofee;
-    }
-
     public String getType() {
         return type;
     }
@@ -374,6 +315,13 @@ public class BuildingEntity {
         this.type = type;
     }
 
+    public Date getCreateddate() {
+        return createddate;
+    }
+
+    public void setCreateddate(Date createddate) {
+        this.createddate = createddate;
+    }
 
     public Date getModifieddate() {
         return modifieddate;
@@ -399,6 +347,14 @@ public class BuildingEntity {
         this.modifiedby = modifiedby;
     }
 
+    public String getManagername() {
+        return managername;
+    }
+
+    public void setManagername(String managername) {
+        this.managername = managername;
+    }
+
     public String getManagerphone() {
         return managerphone;
     }
@@ -407,6 +363,21 @@ public class BuildingEntity {
         this.managerphone = managerphone;
     }
 
+    public List<RentAreaEntity> getItems() {
+        return items;
+    }
+
+    public void setItems(List<RentAreaEntity> items) {
+        this.items = items;
+    }
+
+    public List<UserEntity> getUserEntities() {
+        return userEntities;
+    }
+
+    public void setUserEntities(List<UserEntity> userEntities) {
+        this.userEntities = userEntities;
+    }
 
 
     //    @ManyToOne
