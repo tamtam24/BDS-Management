@@ -125,13 +125,13 @@
                                 </div>
 
                             </div>
-                            <%--<div class="form-group">--%>
-                                <%--<label class="col-xs-3">Diện tích thuê</label>--%>
-                                <%--<div class="col-xs-9">--%>
-                                    <%--<form:input class="form-control" path="rentArea" name="rentarea" value="" />--%>
-                                <%--</div>--%>
+                            <div class="form-group">
+                                <label class="col-xs-3">Diện tích thuê</label>
+                                <div class="col-xs-9">
+                                    <form:input class="form-control" path="rentArea" name="rentArea" value="" />
+                                </div>
 
-                            <%--</div>--%>
+                            </div>
                             <div class="form-group">
                                 <label class="col-xs-3">Giá thuê</label>
                                 <div class="col-xs-9">
@@ -297,7 +297,9 @@
             }
 
         });
+
         data['typeCode'] = typeCode;
+
         if(typeCode != ''){
             addOrUpdateBuilding(data);
         }
@@ -316,10 +318,15 @@
             dataType: "JSON",
             success: function (respond) {
                 console.log("Success");
+                alert("Thêm/Sửa thành công");
+                window.location.href = "/admin/building-list?message=success";
+
+
             },
             error: function(respond){
                 console.log("Failed");
                 console.log(respond);
+
             }
         });
     }

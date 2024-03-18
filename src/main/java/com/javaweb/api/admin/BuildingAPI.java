@@ -34,21 +34,23 @@ public class BuildingAPI {
     }
     //Them hoạc sua toa nha
     @PostMapping
-    public void addOrUpdateBuilding(@RequestBody BuildingDTO buildingDTO){
+    public Boolean addOrUpdateBuilding(@RequestBody BuildingDTO buildingDTO){
 
         IBuildingService.addOrUpdateBuilding(buildingDTO);
         //xuong db de update boac them  moi
         System.out.println("da them/sua toa nha thanh cong");
+        return true;
 
 
     }
 
     //Xoa toa nha
     @DeleteMapping("/{ids}")
-    public void deleteBuilding(@PathVariable List<Long> ids){
+    public Boolean deleteBuilding(@PathVariable List<Long> ids){
         //xuong db de xoa building theo ds gui ve
         IBuildingService.deleteBuildings(ids);
         System.out.println("oke");
+        return true;
     }
 
     @GetMapping("/{id}/staffs")
@@ -61,6 +63,9 @@ public class BuildingAPI {
     public void updateAssignmentBuilding(@RequestBody AssignmentBuildingDTO assignmentBuildingDTO){
         IUserService.updateAssignmentBuilding(assignmentBuildingDTO);
         System.out.println("oke");
+//        ResponseDTO responseDTO=new ResponseDTO();
+//        responseDTO.setMessage("success");
+//        return  responseDTO;
     }
 
 }
