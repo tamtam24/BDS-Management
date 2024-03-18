@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
                 item.setAccessible(true);
                 String fieldName=item.getName();
                 if (!fieldName.equals("staffId") && !fieldName.startsWith("area")
-                        && !fieldName.startsWith("rentPrice")) {
+                        && !fieldName.startsWith("rentPrice") && !fieldName.equals("typeCode")) {
                     Object value = item.get(buildingSearchRequest);
                     if (value!=null && value !="") {
                         if (item.getType().getName().equals("java.lang.Long")||item.getType().getName().equals("java.lang.Integer")||item.getType().getName().equals("java.lang.Float")) {
@@ -71,7 +72,7 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
         Long staffId = buildingSearchRequest.getStaffId();
 
         if (staffId!=null) {
-            where.append(" AND assignmentbuilding.staffid = " + staffId + " ");
+            where.append(" AND a.staffid = " + staffId + " ");
 
 
         }
@@ -102,18 +103,18 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
             }
         }
         // java 7
-//		if (typeCode != null && typeCode.size() != 0) {
-//			List<String>code = new ArrayList<>();
-//			for( String item:typeCode) {
-//				code.add("'" + item + "'");
-//			}
-//			where.append(" AND renttype.code IN ( " + String.join(",", code) + ") ");
-//		}
+        List<String>typeCode = buildingSearchRequest.getTypeCode();
+		if (typeCode != null && typeCode.size() != 0) {
+
+			for(String item:typeCode){
+			    where.append("  AND b.type like '%" +item+"%' ");
+            }
+		}
         // java 8
-//        List<String>typeCode = buildingSearchBuilder.getTypeCode();
+//        List<String>typeCode = buildingSearchRequest.getTypeCode();
 //        if (typeCode != null && typeCode.size() != 0) {
 //            where.append(" AND (");
-//            String sql = typeCode.stream().map(it -> "renttype.code Like" + "'%" + it + "%'  ")
+//            String sql = typeCode.stream().map(it -> "b.type Like" + "'%" + it + "%'  ")
 //                    .collect(Collectors.joining(" OR "));
 //            where.append(sql);
 //            where.append(" ) ");

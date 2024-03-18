@@ -438,6 +438,7 @@
 
                 console.info("Success");
 
+
             },
             error: function(response){
                 console.info("Giao Không Thành Công");
@@ -480,6 +481,8 @@
             dataType: "JSON",
             success: function (respond) {
                 console.log("Success");
+                alert("Xóa thành công");
+                window.location.href= "<c:url value="/admin/building-list?message=success"/> ";
             },
             error: function(respond){
                 console.log("Failed");

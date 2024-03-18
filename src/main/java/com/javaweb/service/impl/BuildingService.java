@@ -5,6 +5,7 @@ import com.javaweb.converter.BuildingDTOConverter;
 import com.javaweb.converter.BuildingSearchBuilderConverter;
 import com.javaweb.entity.AssignmentBuildingEntity;
 import com.javaweb.entity.BuildingEntity;
+import com.javaweb.entity.RentAreaEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
@@ -13,6 +14,7 @@ import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.repository.AssignmentBuildingRepository;
 import com.javaweb.repository.BuildingRepository;
+import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.IBuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class BuildingService implements IBuildingService {
 
     @Autowired
     private AssignmentBuildingRepository assignmentBuildingRepository;
+
+    @Autowired
+    private RentAreaRepository rentAreaRepository;
 
 
 
@@ -102,13 +107,29 @@ public class BuildingService implements IBuildingService {
             if(updatedBuilding.getName()!=null){
                 existingBuilding.setName(updatedBuilding.getName());
             }
-            if(updatedBuilding.getFloorarea()!=null){
-                existingBuilding.setFloorarea(updatedBuilding.getFloorarea());
-
+            if(updatedBuilding.getStreet()!=null){
+                existingBuilding.setStreet(updatedBuilding.getStreet());
             }
+
+            if(updatedBuilding.getDistrict()!=null){
+                existingBuilding.setDistrict(updatedBuilding.getDistrict());
+            }
+
+            if(updatedBuilding.getWard()!=null){
+                existingBuilding.setWard(updatedBuilding.getWard());
+            }
+
+            if(updatedBuilding.getStructure()!=null){
+                existingBuilding.setStructure(updatedBuilding.getStructure());
+            }
+
             if(updatedBuilding.getNumberofbasement() != 0){
                 existingBuilding.setNumberofbasement(updatedBuilding.getNumberofbasement());
             }
+            if(updatedBuilding.getFloorarea()!=null){
+                existingBuilding.setFloorarea(updatedBuilding.getFloorarea());
+            }
+
             if(updatedBuilding.getDirection() != null){
                 existingBuilding.setDirection(updatedBuilding.getDirection());
             }
@@ -117,6 +138,43 @@ public class BuildingService implements IBuildingService {
             }
             if(updatedBuilding.getRentprice() != null){
                 existingBuilding.setRentprice(updatedBuilding.getRentprice());
+            }
+            if(updatedBuilding.getRentpricedescription() != null){
+                existingBuilding.setRentpricedescription(updatedBuilding.getRentpricedescription());
+            }
+
+            if (updatedBuilding.getServicefee() != null) {
+                existingBuilding.setServicefee(updatedBuilding.getServicefee());
+            }
+            if (updatedBuilding.getCarfee() != null) {
+                existingBuilding.setCarfee(updatedBuilding.getCarfee());
+            }
+            if (updatedBuilding.getMotofee() != null) {
+                existingBuilding.setMotofee(updatedBuilding.getMotofee());
+            }
+            if (updatedBuilding.getOvertimefee() != null) {
+                existingBuilding.setOvertimefee(updatedBuilding.getOvertimefee());
+            }
+            if (updatedBuilding.getElectricityfee() != null) {
+                existingBuilding.setElectricityfee(updatedBuilding.getElectricityfee());
+            }
+            if (updatedBuilding.getDeposit() != null) {
+                existingBuilding.setDeposit(updatedBuilding.getDeposit());
+            }
+            if (updatedBuilding.getPayment() != null) {
+                existingBuilding.setPayment(updatedBuilding.getPayment());
+            }
+            if (updatedBuilding.getRenttime() != null) {
+                existingBuilding.setRenttime(updatedBuilding.getRenttime());
+            }
+            if (updatedBuilding.getDecorationtime() != null) {
+                existingBuilding.setDecorationtime(updatedBuilding.getDecorationtime());
+            }
+            if (updatedBuilding.getBrokeragefee() != null) {
+                existingBuilding.setBrokeragefee(updatedBuilding.getBrokeragefee());
+            }
+            if (updatedBuilding.getNote() != null) {
+                existingBuilding.setNote(updatedBuilding.getNote());
             }
             if(updatedBuilding.getManagername() != null){
                 existingBuilding.setManagername(updatedBuilding.getManagername());
@@ -127,6 +185,9 @@ public class BuildingService implements IBuildingService {
             if(updatedBuilding.getType() != null){
                 existingBuilding.setType(updatedBuilding.getType());
             }
+            if (updatedBuilding.getItems()!=null){
+                existingBuilding.setItems(updatedBuilding.getItems());
+            }
 
             buildingRepository.save(existingBuilding);
         }
@@ -134,6 +195,13 @@ public class BuildingService implements IBuildingService {
         else {
             BuildingEntity newBuilding= buildingDTOConverter.toBuildingEntity(buildingDTO);
             buildingRepository.save(newBuilding);
+            if (newBuilding.getItems()!=null) {
+                for (RentAreaEntity rentAreaEntity : newBuilding.getItems()) {
+                    rentAreaEntity.setBuilding(newBuilding);
+                    rentAreaRepository.save(rentAreaEntity);
+                    System.out.println("luu rentArea oke");
+                }
+            }
             System.out.println("oke here");
         }
 
@@ -142,7 +210,7 @@ public class BuildingService implements IBuildingService {
     }
     public BuildingDTO findBuildingById(Long id){
         BuildingEntity buildingEntity = buildingRepository.findById(id).get();
-        BuildingDTO buildingDTO = buildingDTOConverter.toBuildingDTO(buildingEntity);
+        BuildingDTO buildingDTO = buildingDTOConverter.toBuildingDTO_forUpdateBuilding(buildingEntity);
 
 
         return buildingDTO;
