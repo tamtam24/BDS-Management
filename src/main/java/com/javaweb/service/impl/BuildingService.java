@@ -19,6 +19,7 @@ import com.javaweb.repository.UserRepository;
 import com.javaweb.service.IBuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +99,7 @@ public class BuildingService implements IBuildingService {
     }
 
     @Override
+    @Transactional
     public void addOrUpdateBuilding(BuildingDTO buildingDTO ){
         //update building
 
@@ -185,9 +187,20 @@ public class BuildingService implements IBuildingService {
             if(updatedBuilding.getType() != null){
                 existingBuilding.setType(updatedBuilding.getType());
             }
-            if (updatedBuilding.getItems()!=null){
+            if (updatedBuilding.getItems()!=null) {
+                rentAreaRepository.deleteByBuildingId(existingBuilding.getId());
                 existingBuilding.setItems(updatedBuilding.getItems());
+
+                for (RentAreaEntity rentAreaEntity : existingBuilding.getItems()) {
+                    rentAreaEntity.setBuilding(existingBuilding);
+                    rentAreaRepository.save(rentAreaEntity);
+                    System.out.println("sua rentArea oke");
+
+                }
+
+                buildingRepository.save(existingBuilding);
             }
+
 
             buildingRepository.save(existingBuilding);
         }

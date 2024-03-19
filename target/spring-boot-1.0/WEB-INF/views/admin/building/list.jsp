@@ -412,8 +412,8 @@
         e.preventDefault();
         var data ={};
         data['buildingId']  = $('#buildingId').val();
-            var staffs = $('#staffList').find('tbody input[type = checkbox]:checked').map(function(){
-                return $(this).val();
+        var staffs = $('#staffList').find('tbody input[type = checkbox]:checked').map(function(){
+            return $(this).val();
 
         }).get();
         data["staffs"]=staffs;
@@ -437,6 +437,8 @@
             success: function (response) {
 
                 console.info("Success");
+                alert("Giao tòa nhà thành công");
+                window.location.href= "<c:url value="/admin/building-list?message=success"/> ";
 
 
             },
