@@ -73,6 +73,7 @@ public class BuildingDTOConverter {
         }
         building.setType(typeCodeString);
         String[] rentAreas = item.getRentArea().split(",");
+        
         List<RentAreaEntity>rentAreaEntities=new ArrayList<>();
         for(String area:rentAreas){
             RentAreaEntity rentAreaEntity= new RentAreaEntity();

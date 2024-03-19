@@ -60,9 +60,10 @@ public class BuildingAPI {
     }
 
     @PostMapping("/assignment")
-    public void updateAssignmentBuilding(@RequestBody AssignmentBuildingDTO assignmentBuildingDTO){
+    public Boolean updateAssignmentBuilding(@RequestBody AssignmentBuildingDTO assignmentBuildingDTO){
         IUserService.updateAssignmentBuilding(assignmentBuildingDTO);
         System.out.println("oke");
+        return true;
 //        ResponseDTO responseDTO=new ResponseDTO();
 //        responseDTO.setMessage("success");
 //        return  responseDTO;

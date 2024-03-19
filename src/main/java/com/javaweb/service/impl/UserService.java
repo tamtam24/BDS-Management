@@ -10,7 +10,7 @@ import com.javaweb.model.dto.UserDTO;
 import com.javaweb.entity.RoleEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.exception.MyException;
-import com.javaweb.repository.AssignmentBuildingRepository;
+//import com.javaweb.repository.AssignmentBuildingRepository;
 import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.RoleRepository;
 import com.javaweb.repository.UserRepository;
@@ -48,8 +48,8 @@ public class UserService implements IUserService {
     @Autowired
     private BuildingRepository buildingRepository;
 
-    @Autowired
-    private AssignmentBuildingRepository assignmentBuildingRepository;
+//    @Autowired
+//    private AssignmentBuildingRepository assignmentBuildingRepository;
 
 
 
@@ -206,16 +206,20 @@ public class UserService implements IUserService {
     @Transactional
     public void updateAssignmentBuilding(AssignmentBuildingDTO assignmentBuildingDTO){
         BuildingEntity buildingEntity = buildingRepository.findById(assignmentBuildingDTO.getBuildingId()).get();
-        assignmentBuildingRepository.deleteAssignmentBuildingEntityByBuilding(buildingEntity);
-        List<UserEntity>AssignmentStaffs = userRepository.findAllById(assignmentBuildingDTO.getStaffs());
+        List<UserEntity>staffAssignmentBuilding = userRepository.findAllById(assignmentBuildingDTO.getStaffs());
+        buildingEntity.setUserEntities(staffAssignmentBuilding);
+        buildingRepository.save(buildingEntity);
 
-        for(UserEntity it: AssignmentStaffs){
-            AssignmentBuildingEntity assignmentBuildingEntity = new AssignmentBuildingEntity();
-            assignmentBuildingEntity.setBuilding(buildingEntity);
-            assignmentBuildingEntity.setStaffs(it);
-            assignmentBuildingRepository.save(assignmentBuildingEntity);
+//        assignmentBuildingRepository.deleteAssignmentBuildingEntityByBuilding(buildingEntity);
+//        List<UserEntity>AssignmentStaffs = userRepository.findAllById(assignmentBuildingDTO.getStaffs());
 
-        }
+//        for(UserEntity it: AssignmentStaffs){
+//            AssignmentBuildingEntity assignmentBuildingEntity = new AssignmentBuildingEntity();
+//            assignmentBuildingEntity.setBuilding(buildingEntity);
+//            assignmentBuildingEntity.setStaffs(it);
+//            assignmentBuildingRepository.save(assignmentBuildingEntity);
+//
+//        }
 
 
     }

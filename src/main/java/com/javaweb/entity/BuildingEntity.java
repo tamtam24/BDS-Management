@@ -109,7 +109,7 @@ public class BuildingEntity {
     @Column(name = "managerphone")
     private String managerphone;
 
-    @OneToMany(mappedBy="building",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="building",fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
     private List<RentAreaEntity>items = new ArrayList<>();
 
 
@@ -117,7 +117,7 @@ public class BuildingEntity {
 //    private  List<AssignmentBuildingEntity>assignmentBuildingEntities=new ArrayList<>();
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
     @JoinTable(name = "assignmentbuilding",
             joinColumns = @JoinColumn(name = "buildingid", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "staffid", nullable = false))

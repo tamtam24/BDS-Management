@@ -437,6 +437,8 @@
             success: function (response) {
 
                 console.info("Success");
+                alert("Giao tòa nhà thành công");
+                window.location.href= "<c:url value="/admin/building-list?message=success"/> ";
 
 
             },

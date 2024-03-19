@@ -6,7 +6,7 @@ import com.javaweb.entity.UserEntity;
 
 import java.util.List;
 
-public interface AssignmentBuildingCustom {
-//    List<UserEntity> findUsersByBuilding(BuildingEntity buildingEntity);
-    void deleteAssignmentBuildingEntityByBuilding(BuildingEntity buildingEntity);
-}
+//public interface AssignmentBuildingCustom {
+////    List<UserEntity> findUsersByBuilding(BuildingEntity buildingEntity);
+//    void deleteAssignmentBuildingEntityByBuilding(BuildingEntity buildingEntity);
+//}
