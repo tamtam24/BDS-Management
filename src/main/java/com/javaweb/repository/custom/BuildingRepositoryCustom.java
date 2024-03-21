@@ -5,6 +5,7 @@ import com.javaweb.entity.BuildingEntity;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 public interface BuildingRepositoryCustom {
