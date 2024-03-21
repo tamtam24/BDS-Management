@@ -83,6 +83,10 @@ public class BuildingDTOConverter {
         building.setItems(rentAreaEntities);
 
         return building;
+    }
+    public BuildingEntity entityToEntity(BuildingEntity oldBuilding,BuildingEntity newBuilding){
+        oldBuilding = modelMapper.map(newBuilding,oldBuilding.getClass());
 
+        return oldBuilding;
     }
 }

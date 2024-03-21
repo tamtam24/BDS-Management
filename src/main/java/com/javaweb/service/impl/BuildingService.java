@@ -101,120 +101,58 @@ public class BuildingService implements IBuildingService {
     @Override
     @Transactional
     public void addOrUpdateBuilding(BuildingDTO buildingDTO ){
+        BuildingEntity updatedOrNewBuilding = buildingDTOConverter.toBuildingEntity(buildingDTO);
+        BuildingEntity existingBuilding;
+        if(buildingDTO.getId()!=null) {
+            existingBuilding = buildingRepository.findById(buildingDTO.getId()).get();
+        }
+        else {
+            existingBuilding = new BuildingEntity();
+        }
+
+        existingBuilding = buildingDTOConverter.entityToEntity(existingBuilding,updatedOrNewBuilding);
+        buildingRepository.save(existingBuilding);
+        rentAreaRepository.deleteByBuildingId(existingBuilding.getId());
+
+        for (RentAreaEntity rentAreaEntity : updatedOrNewBuilding.getItems()) {
+            rentAreaEntity.setBuilding(updatedOrNewBuilding);
+            rentAreaRepository.save(rentAreaEntity);
+            System.out.println("luu rentArea oke");
+        }
         //update building
 
-        if(buildingDTO.getId()!=null){
-            BuildingEntity existingBuilding = buildingRepository.findById(buildingDTO.getId()).get();
-            BuildingEntity updatedBuilding = buildingDTOConverter.toBuildingEntity(buildingDTO);
-
-            if(updatedBuilding.getName()!=null){
-                existingBuilding.setName(updatedBuilding.getName());
-            }
-            if(updatedBuilding.getStreet()!=null){
-                existingBuilding.setStreet(updatedBuilding.getStreet());
-            }
-
-            if(updatedBuilding.getDistrict()!=null){
-                existingBuilding.setDistrict(updatedBuilding.getDistrict());
-            }
-
-            if(updatedBuilding.getWard()!=null){
-                existingBuilding.setWard(updatedBuilding.getWard());
-            }
-
-            if(updatedBuilding.getStructure()!=null){
-                existingBuilding.setStructure(updatedBuilding.getStructure());
-            }
-
-            if(updatedBuilding.getNumberofbasement() != 0){
-                existingBuilding.setNumberofbasement(updatedBuilding.getNumberofbasement());
-            }
-            if(updatedBuilding.getFloorarea()!=null){
-                existingBuilding.setFloorarea(updatedBuilding.getFloorarea());
-            }
-
-            if(updatedBuilding.getDirection() != null){
-                existingBuilding.setDirection(updatedBuilding.getDirection());
-            }
-            if(updatedBuilding.getLevel() != null){
-                existingBuilding.setLevel(updatedBuilding.getLevel());
-            }
-            if(updatedBuilding.getRentprice() != null){
-                existingBuilding.setRentprice(updatedBuilding.getRentprice());
-            }
-            if(updatedBuilding.getRentpricedescription() != null){
-                existingBuilding.setRentpricedescription(updatedBuilding.getRentpricedescription());
-            }
-
-            if (updatedBuilding.getServicefee() != null) {
-                existingBuilding.setServicefee(updatedBuilding.getServicefee());
-            }
-            if (updatedBuilding.getCarfee() != null) {
-                existingBuilding.setCarfee(updatedBuilding.getCarfee());
-            }
-            if (updatedBuilding.getMotofee() != null) {
-                existingBuilding.setMotofee(updatedBuilding.getMotofee());
-            }
-            if (updatedBuilding.getOvertimefee() != null) {
-                existingBuilding.setOvertimefee(updatedBuilding.getOvertimefee());
-            }
-            if (updatedBuilding.getElectricityfee() != null) {
-                existingBuilding.setElectricityfee(updatedBuilding.getElectricityfee());
-            }
-            if (updatedBuilding.getDeposit() != null) {
-                existingBuilding.setDeposit(updatedBuilding.getDeposit());
-            }
-            if (updatedBuilding.getPayment() != null) {
-                existingBuilding.setPayment(updatedBuilding.getPayment());
-            }
-            if (updatedBuilding.getRenttime() != null) {
-                existingBuilding.setRenttime(updatedBuilding.getRenttime());
-            }
-            if (updatedBuilding.getDecorationtime() != null) {
-                existingBuilding.setDecorationtime(updatedBuilding.getDecorationtime());
-            }
-            if (updatedBuilding.getBrokeragefee() != null) {
-                existingBuilding.setBrokeragefee(updatedBuilding.getBrokeragefee());
-            }
-            if (updatedBuilding.getNote() != null) {
-                existingBuilding.setNote(updatedBuilding.getNote());
-            }
-            if(updatedBuilding.getManagername() != null){
-                existingBuilding.setManagername(updatedBuilding.getManagername());
-            }
-            if(updatedBuilding.getManagerphone() != null){
-                existingBuilding.setManagerphone(updatedBuilding.getManagerphone());
-            }
-            if(updatedBuilding.getType() != null){
-                existingBuilding.setType(updatedBuilding.getType());
-            }
-            if (updatedBuilding.getItems()!=null) {
-                rentAreaRepository.deleteByBuildingId(existingBuilding.getId());
-                existingBuilding.setItems(updatedBuilding.getItems());
-
-                for (RentAreaEntity rentAreaEntity : existingBuilding.getItems()) {
-                    rentAreaEntity.setBuilding(existingBuilding);
-                    rentAreaRepository.save(rentAreaEntity);
-                    System.out.println("sua rentArea oke");
-
-                }
-
-                buildingRepository.save(existingBuilding);
-            }
-        }
-        //adding new building
-        else {
-            BuildingEntity newBuilding= buildingDTOConverter.toBuildingEntity(buildingDTO);
-            buildingRepository.save(newBuilding);
-            if (newBuilding.getItems()!=null) {
-                for (RentAreaEntity rentAreaEntity : newBuilding.getItems()) {
-                    rentAreaEntity.setBuilding(newBuilding);
-                    rentAreaRepository.save(rentAreaEntity);
-                    System.out.println("luu rentArea oke");
-                }
-            }
-            System.out.println("oke here");
-        }
+//        if(buildingDTO.getId()!=null){
+//            BuildingEntity existingBuilding = buildingRepository.findById(buildingDTO.getId()).get();
+//            BuildingEntity updatedBuilding = buildingDTOConverter.toBuildingEntity(buildingDTO);
+//
+//            existingBuilding= buildingDTOConverter.entityToEntity(existingBuilding,updatedBuilding);
+//
+//            if (updatedBuilding.getItems()!=null) {
+//                rentAreaRepository.deleteByBuildingId(existingBuilding.getId());
+//
+//                for (RentAreaEntity rentAreaEntity : existingBuilding.getItems()) {
+//                    rentAreaEntity.setBuilding(existingBuilding);
+//                    rentAreaRepository.save(rentAreaEntity);
+//                    System.out.println("sua rentArea oke");
+//                }
+//
+//            }
+//
+//            buildingRepository.save(existingBuilding);
+//        }
+//        //adding new building
+//        else {
+//            BuildingEntity newBuilding= buildingDTOConverter.toBuildingEntity(buildingDTO);
+//            buildingRepository.save(newBuilding);
+//            if (newBuilding.getItems()!=null) {
+//                for (RentAreaEntity rentAreaEntity : newBuilding.getItems()) {
+//                    rentAreaEntity.setBuilding(newBuilding);
+//                    rentAreaRepository.save(rentAreaEntity);
+//                    System.out.println("luu rentArea oke");
+//                }
+//            }
+//            System.out.println("oke here");
+//        }
 
 
 
