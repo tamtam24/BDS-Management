@@ -109,8 +109,12 @@ public class BuildingEntity {
     @Column(name = "managerphone")
     private String managerphone;
 
-    @OneToMany(mappedBy="building",fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy="building",fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.PERSIST,CascadeType.MERGE},orphanRemoval = true)
     private List<RentAreaEntity>items = new ArrayList<>();
+
+    public void removeRentArea(List<RentAreaEntity>rentAreaEntity){
+        items.remove(rentAreaEntity);
+    }
 
 
 //    @OneToMany(mappedBy = "building",fetch = FetchType.LAZY)
@@ -121,6 +125,8 @@ public class BuildingEntity {
     @JoinTable(name = "assignmentbuilding",
             joinColumns = @JoinColumn(name = "buildingid", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "staffid", nullable = false))
+
+
     private List<UserEntity> userEntities = new ArrayList<>();
 
     public Long getId() {

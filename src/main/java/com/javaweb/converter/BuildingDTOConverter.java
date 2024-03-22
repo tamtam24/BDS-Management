@@ -85,7 +85,17 @@ public class BuildingDTOConverter {
         return building;
     }
     public BuildingEntity entityToEntity(BuildingEntity oldBuilding,BuildingEntity newBuilding){
+
         oldBuilding = modelMapper.map(newBuilding,oldBuilding.getClass());
+        oldBuilding.removeRentArea(oldBuilding.getItems());
+        for (RentAreaEntity rentAreaEntity : oldBuilding.getItems()) {
+            rentAreaEntity.setBuilding(oldBuilding);
+            System.out.println("luu rentArea oke");
+        }
+//        for( RentAreaEntity item:oldBuilding.getItems()){
+//            oldBuilding.removeRentArea(item);
+//        }
+
 
         return oldBuilding;
     }
