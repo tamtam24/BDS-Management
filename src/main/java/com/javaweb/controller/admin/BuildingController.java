@@ -2,6 +2,7 @@ package com.javaweb.controller.admin;
 
 
 
+import com.javaweb.constant.SystemConstant;
 import com.javaweb.enums.District;
 import com.javaweb.enums.TypeCode;
 import com.javaweb.model.dto.BuildingDTO;
@@ -34,7 +35,7 @@ public class BuildingController {
 
 
     @GetMapping (value="admin/building-list")
-        public ModelAndView builldingList(@ModelAttribute BuildingSearchRequest buildingSearchRequest, HttpServletRequest request){
+        public ModelAndView builldingList(@ModelAttribute (SystemConstant.MODEL) BuildingSearchRequest buildingSearchRequest, HttpServletRequest request){
             ModelAndView nav = new ModelAndView("admin/building/list");
             DisplayTagUtils.of(request, buildingSearchRequest);
             nav.addObject("modelSearch",buildingSearchRequest);

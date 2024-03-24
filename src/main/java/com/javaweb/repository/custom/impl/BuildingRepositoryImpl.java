@@ -129,13 +129,14 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
         StringBuilder where = new StringBuilder(" WHERE 1=1 ");
         queryNormal(buildingSearchRequest, where);
         querySpecial(buildingSearchRequest, where);
-        where.append(" GROUP BY b.id; ");
+        where.append(" GROUP BY b.id ");
         if (pageable != null) {
             sql.append(where).append(" LIMIT ").append(pageable.getPageSize())
                     .append(" OFFSET ").append(pageable.getOffset());
         } else {
             sql.append(where);
         }
+        sql.append(" ; ");
         Query query = entityManager.createNativeQuery(sql.toString(),BuildingEntity.class);
 
         return query.getResultList();

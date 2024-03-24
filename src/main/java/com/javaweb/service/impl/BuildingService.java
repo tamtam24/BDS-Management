@@ -17,11 +17,14 @@ import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.IBuildingService;
+import com.javaweb.utils.UploadFileUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +48,9 @@ public class BuildingService implements IBuildingService {
 
     @Autowired
     private RentAreaRepository rentAreaRepository;
+
+    @Autowired
+    private UploadFileUtils uploadFileUtils;
 
 
 
@@ -115,16 +121,23 @@ public class BuildingService implements IBuildingService {
         else {
             existingBuilding = new BuildingEntity();
         }
+        saveThumbnail(buildingDTO, updatedOrNewBuilding);
 
         existingBuilding = buildingDTOConverter.entityToEntity(existingBuilding,updatedOrNewBuilding);
         buildingRepository.save(existingBuilding);
+
         rentAreaRepository.deleteByBuildingId(existingBuilding.getId());
 
-        for (RentAreaEntity rentAreaEntity : updatedOrNewBuilding.getItems()) {
+
+            for (RentAreaEntity rentAreaEntity : updatedOrNewBuilding.getItems()) {
+                if(rentAreaEntity.getValue()!=""){
                     rentAreaEntity.setBuilding(updatedOrNewBuilding);
                     rentAreaRepository.save(rentAreaEntity);
                     System.out.println("luu rentArea oke");
                 }
+
+            }
+
         //update building
 
 //        if(buildingDTO.getId()!=null){
@@ -170,6 +183,22 @@ public class BuildingService implements IBuildingService {
 
         return buildingDTO;
     }
+
+    private void saveThumbnail(BuildingDTO buildingDTO, BuildingEntity buildingEntity) {
+        String path = "/building/" + buildingDTO.getImageName();
+        if (null != buildingDTO.getImageBase64()) {
+            if (null != buildingEntity.getImage()) {
+                if (!path.equals(buildingEntity.getImage())) {
+                    File file = new File("D://Devops Learning/Java Spring/Picture" + buildingEntity.getImage());
+                    file.delete();
+                }
+            }
+            byte[] bytes = Base64.decodeBase64(buildingDTO.getImageBase64().getBytes());
+            uploadFileUtils.writeOrUpdate(path, bytes);
+            buildingEntity.setImage(path);
+        }
+    }
+
 
 
 

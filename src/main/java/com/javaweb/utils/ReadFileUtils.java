@@ -24,7 +24,7 @@ public class ReadFileUtils extends HttpServlet {
         }
         ServletOutputStream outStream;
         outStream = response.getOutputStream();
-        FileInputStream fin = new FileInputStream("C://home/office" + relativeImagePath);
+        FileInputStream fin = new FileInputStream("D://Devops Learning/Java Spring/Picture" + relativeImagePath);
         BufferedInputStream bin = new BufferedInputStream(fin);
         BufferedOutputStream bout = new BufferedOutputStream(outStream);
         int ch =0;
