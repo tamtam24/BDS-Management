@@ -35,10 +35,12 @@ public class BuildingController {
 
 
     @GetMapping (value="admin/building-list")
-        public ModelAndView builldingList(@ModelAttribute (SystemConstant.MODEL) BuildingSearchRequest buildingSearchRequest, HttpServletRequest request){
+        public ModelAndView buildingList(@ModelAttribute (SystemConstant.MODEL)  BuildingSearchRequest buildingSearchRequest, HttpServletRequest request){
             ModelAndView nav = new ModelAndView("admin/building/list");
-            DisplayTagUtils.of(request, buildingSearchRequest);
+
+
             nav.addObject("modelSearch",buildingSearchRequest);
+        DisplayTagUtils.of(request, buildingSearchRequest);
 
         List<BuildingSearchResponse> responseList = IBuildingService.findAll(buildingSearchRequest, PageRequest.of(buildingSearchRequest.getPage() - 1, buildingSearchRequest.getMaxPageItems()));
         buildingSearchRequest.setListResult(responseList);
@@ -47,6 +49,7 @@ public class BuildingController {
         nav.addObject("ListStaffs",userService.getStaffs());
         nav.addObject("districts", District.type());
         nav.addObject("typeCodes", TypeCode.type());
+
 
 
             return  nav;

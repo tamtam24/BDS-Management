@@ -131,8 +131,9 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
         querySpecial(buildingSearchRequest, where);
         where.append(" GROUP BY b.id ");
         if (pageable != null) {
-            sql.append(where).append(" LIMIT ").append(pageable.getPageSize())
-                    .append(" OFFSET ").append(pageable.getOffset());
+            int t = pageable.getPageSize();
+            Long m = pageable.getOffset();
+            sql.append(where).append(" LIMIT "+ t) .append(" OFFSET "+ m );
         } else {
             sql.append(where);
         }

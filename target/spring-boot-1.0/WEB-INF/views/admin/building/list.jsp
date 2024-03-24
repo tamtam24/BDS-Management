@@ -229,10 +229,10 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="table-responsive">
-                            <display:table name="modelSearch.listResult" cellspacing="0" cellpadding="0"
-                                           requestURI="${buildingList}" partialList="true" sort="external"
-                                           size="${modelSearch.totalItems}" defaultsort="2" defaultorder="ascending"
-                                           id="tableList" pagesize="${modelSearch.maxPageItems}"
+                            <display:table name="model.listResult" cellspacing="0" cellpadding="0"
+                                           requestURI="${buildingListURL}" partialList="true" sort="external"
+                                           size="${model.totalItems}" defaultsort="2" defaultorder="ascending"
+                                           id="tableList" pagesize="${model.maxPageItems}"
                                            export="false"
                                            class="table table-fcv-ace table-striped table-bordered table-hover dataTable no-footer"
                                            style="margin: 3em 0 1.5em;">
