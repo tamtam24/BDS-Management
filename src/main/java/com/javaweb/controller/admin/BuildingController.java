@@ -2,6 +2,7 @@ package com.javaweb.controller.admin;
 
 
 
+import com.javaweb.constant.SystemConstant;
 import com.javaweb.enums.District;
 import com.javaweb.enums.TypeCode;
 import com.javaweb.model.dto.BuildingDTO;
@@ -9,7 +10,9 @@ import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.service.IBuildingService;
 import com.javaweb.service.IUserService;
+import com.javaweb.utils.DisplayTagUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,20 +34,26 @@ public class BuildingController {
 
 
     @GetMapping (value="admin/building-list")
-        public ModelAndView builldingList(@ModelAttribute BuildingSearchRequest buildingSearchRequest, HttpServletRequest request){
-            ModelAndView nav = new ModelAndView("admin/building/list");
-            nav.addObject("modelSearch",buildingSearchRequest);
+    public ModelAndView buildingList(@ModelAttribute (SystemConstant.MODEL)  BuildingSearchRequest buildingSearchRequest, HttpServletRequest request){
+        ModelAndView nav = new ModelAndView("admin/building/list");
 
-        List<BuildingSearchResponse>responseList = IBuildingService.findAll(buildingSearchRequest);
-        nav.addObject("buildingList",responseList);
+
+        nav.addObject("modelSearch",buildingSearchRequest);
+        DisplayTagUtils.of(request, buildingSearchRequest);
+
+        List<BuildingSearchResponse> responseList = IBuildingService.findAll(buildingSearchRequest, PageRequest.of(buildingSearchRequest.getPage() - 1, buildingSearchRequest.getMaxPageItems()));
+        buildingSearchRequest.setListResult(responseList);
+        buildingSearchRequest.setTotalItems(IBuildingService.countTotalItem());
+        nav.addObject("buildingList",buildingSearchRequest);
         nav.addObject("ListStaffs",userService.getStaffs());
         nav.addObject("districts", District.type());
         nav.addObject("typeCodes", TypeCode.type());
 
 
-            return  nav;
 
-        }
+        return  nav;
+
+    }
 
     @GetMapping (value="admin/building-edit")
     public ModelAndView buildingEdit(@ModelAttribute("buildingEdit") BuildingDTO buildingDTO , HttpServletRequest request){

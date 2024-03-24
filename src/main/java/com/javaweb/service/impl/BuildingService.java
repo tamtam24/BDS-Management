@@ -17,10 +17,14 @@ import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.IBuildingService;
+import com.javaweb.utils.UploadFileUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,38 +49,44 @@ public class BuildingService implements IBuildingService {
     @Autowired
     private RentAreaRepository rentAreaRepository;
 
+    @Autowired
+    private UploadFileUtils uploadFileUtils;
 
 
     @Override
-    public ResponseDTO listStaffs (Long buildingId){
-        BuildingEntity building= buildingRepository.findById(buildingId).get();
-        List<UserEntity>staffs= userRepository.findByStatusAndRoles_Code(1,"STAFF");
+    public ResponseDTO listStaffs(Long buildingId) {
+        BuildingEntity building = buildingRepository.findById(buildingId).get();
+        List<UserEntity> staffs = userRepository.findByStatusAndRoles_Code(1, "STAFF");
 //        List<UserEntity> staffAssignment = userRepository.findUsersByBuilding(building);
-        List<UserEntity>staffAssignment= building.getUserEntities();
-        List<StaffResponseDTO>staffResponseDTOS=new ArrayList<>();
-        ResponseDTO responseDTO= new ResponseDTO();
-        for(UserEntity it: staffs){
-            StaffResponseDTO staffResponseDTO= new StaffResponseDTO();
+        List<UserEntity> staffAssignment = building.getUserEntities();
+        List<StaffResponseDTO> staffResponseDTOS = new ArrayList<>();
+        ResponseDTO responseDTO = new ResponseDTO();
+        for (UserEntity it : staffs) {
+            StaffResponseDTO staffResponseDTO = new StaffResponseDTO();
             staffResponseDTO.setFullName(it.getFullName());
             staffResponseDTO.setStaffId(it.getId());
-            if(staffAssignment.contains(it)){
+            if (staffAssignment.contains(it)) {
                 staffResponseDTO.setChecked("checked");
-            }
-            else{
+            } else {
                 staffResponseDTO.setChecked("");
             }
             staffResponseDTOS.add(staffResponseDTO);
         }
         responseDTO.setData(staffResponseDTOS);
         responseDTO.setMessage("success");
-        return  responseDTO;
+        return responseDTO;
 
     }
 
     @Override
-    public List<BuildingSearchResponse> findAll(BuildingSearchRequest buildingSearchRequest) {
+    public int countTotalItem() {
+        return buildingRepository.countTotalItem();
+    }
+
+    @Override
+    public List<BuildingSearchResponse> findAll(BuildingSearchRequest buildingSearchRequest, Pageable pageable) {
 //        BuildingSearchBuilder buildingSearchBuilder=buildingSearchBuilderConverter.toBuildingSearchBuilder(params, typeCode);
-        List<BuildingEntity> buildingEntities = buildingRepository.findAllBuilding(buildingSearchRequest);
+        List<BuildingEntity> buildingEntities = buildingRepository.findAllBuilding(buildingSearchRequest, pageable);
         List<BuildingSearchResponse> result = new ArrayList<BuildingSearchResponse>();
         for (BuildingEntity item : buildingEntities) {
             BuildingSearchResponse building = buildingDTOConverter.toBuildingResponce(item);
@@ -86,8 +96,8 @@ public class BuildingService implements IBuildingService {
     }
 
     @Override
-    public void deleteBuildings (List<Long>ids){
-        for(Long id:ids){
+    public void deleteBuildings(List<Long> ids) {
+        for (Long id : ids) {
 
 //            buildingRepository.deleteRentAreaByBuildingId(id);
 //            buildingRepository.deleteAssignmentByBuildingId(id);
@@ -100,20 +110,19 @@ public class BuildingService implements IBuildingService {
 
     @Override
     @Transactional
-    public void addOrUpdateBuilding(BuildingDTO buildingDTO ){
+    public void addOrUpdateBuilding(BuildingDTO buildingDTO) {
         BuildingEntity updatedOrNewBuilding = buildingDTOConverter.toBuildingEntity(buildingDTO);
         BuildingEntity existingBuilding;
-        if(buildingDTO.getId()!=null) {
+        if (buildingDTO.getId() != null) {
             existingBuilding = buildingRepository.findById(buildingDTO.getId()).get();
-        }
-        else {
+        } else {
             existingBuilding = new BuildingEntity();
         }
+        saveThumbnail(buildingDTO, updatedOrNewBuilding);
 
-        existingBuilding = buildingDTOConverter.entityToEntity(existingBuilding,updatedOrNewBuilding);
+        existingBuilding = buildingDTOConverter.entityToEntity(existingBuilding, updatedOrNewBuilding);
         buildingRepository.save(existingBuilding);
 //        rentAreaRepository.deleteByBuildingId(existingBuilding.getId());
-
 
 
         //update building
@@ -152,9 +161,9 @@ public class BuildingService implements IBuildingService {
 //        }
 
 
-
     }
-    public BuildingDTO findBuildingById(Long id){
+
+    public BuildingDTO findBuildingById(Long id) {
         BuildingEntity buildingEntity = buildingRepository.findById(id).get();
         BuildingDTO buildingDTO = buildingDTOConverter.toBuildingDTO_forUpdateBuilding(buildingEntity);
 
@@ -162,6 +171,20 @@ public class BuildingService implements IBuildingService {
         return buildingDTO;
     }
 
+    private void saveThumbnail(BuildingDTO buildingDTO, BuildingEntity buildingEntity) {
+        String path = "/building/" + buildingDTO.getImageName();
+        if (null != buildingDTO.getImageBase64()) {
+            if (null != buildingEntity.getImage()) {
+                if (!path.equals(buildingEntity.getImage())) {
+                    File file = new File("D://Devops Learning/Java Spring/Picture" + buildingEntity.getImage());
+                    file.delete();
+                }
+            }
+            byte[] bytes = Base64.decodeBase64(buildingDTO.getImageBase64().getBytes());
+            uploadFileUtils.writeOrUpdate(path, bytes);
+            buildingEntity.setImage(path);
+        }
 
 
+    }
 }
