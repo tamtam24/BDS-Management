@@ -18,6 +18,7 @@ import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.IBuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +49,11 @@ public class BuildingService implements IBuildingService {
 
 
     @Override
+    public int countTotalItem() {
+        return buildingRepository.countTotalItem();
+    }
+
+    @Override
     public ResponseDTO listStaffs (Long buildingId){
         BuildingEntity building= buildingRepository.findById(buildingId).get();
         List<UserEntity>staffs= userRepository.findByStatusAndRoles_Code(1,"STAFF");
@@ -74,9 +80,9 @@ public class BuildingService implements IBuildingService {
     }
 
     @Override
-    public List<BuildingSearchResponse> findAll(BuildingSearchRequest buildingSearchRequest) {
+    public List<BuildingSearchResponse> findAll(BuildingSearchRequest buildingSearchRequest, Pageable pageable) {
 //        BuildingSearchBuilder buildingSearchBuilder=buildingSearchBuilderConverter.toBuildingSearchBuilder(params, typeCode);
-        List<BuildingEntity> buildingEntities = buildingRepository.findAllBuilding(buildingSearchRequest);
+        List<BuildingEntity> buildingEntities = buildingRepository.findAllBuilding(buildingSearchRequest,pageable);
         List<BuildingSearchResponse> result = new ArrayList<BuildingSearchResponse>();
         for (BuildingEntity item : buildingEntities) {
             BuildingSearchResponse building = buildingDTOConverter.toBuildingResponce(item);
@@ -164,6 +170,8 @@ public class BuildingService implements IBuildingService {
 
         return buildingDTO;
     }
+
+
 
 
 

@@ -64,14 +64,15 @@ public class BuildingDTOConverter {
     public BuildingEntity toBuildingEntity(BuildingDTO item) {
         BuildingEntity building = modelMapper.map(item, BuildingEntity.class);
 
-        String typeCodeString="";
-        for (String str:item.getTypeCode()){
-            typeCodeString+= str+ ",";
-        }
-        if (typeCodeString!="") {
-            typeCodeString = typeCodeString.substring(0, typeCodeString.length() - 1);
-        }
-        building.setType(typeCodeString);
+//        String typeCodeString="";
+        String typeCodeStringJoin = item.getTypeCode().stream().collect(Collectors.joining(","));
+//        for (String str:item.getTypeCode()){
+//            typeCodeString+= str+ ",";
+//        }
+//        if (typeCodeString!="") {
+//            typeCodeString = typeCodeString.substring(0, typeCodeString.length() - 1);
+//        }
+        building.setType(typeCodeStringJoin);
         String[] rentAreas = item.getRentArea().split(",");
         List<RentAreaEntity>rentAreaEntities=new ArrayList<>();
         for(String area:rentAreas){

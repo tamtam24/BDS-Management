@@ -9,7 +9,9 @@ import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.service.IBuildingService;
 import com.javaweb.service.IUserService;
+import com.javaweb.utils.DisplayTagUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.data.domain.Pageable;
 
 @Controller(value="buildingControllerOfAdmin")
 public class BuildingController {
@@ -33,10 +36,13 @@ public class BuildingController {
     @GetMapping (value="admin/building-list")
         public ModelAndView builldingList(@ModelAttribute BuildingSearchRequest buildingSearchRequest, HttpServletRequest request){
             ModelAndView nav = new ModelAndView("admin/building/list");
+            DisplayTagUtils.of(request, buildingSearchRequest);
             nav.addObject("modelSearch",buildingSearchRequest);
 
-        List<BuildingSearchResponse>responseList = IBuildingService.findAll(buildingSearchRequest);
-        nav.addObject("buildingList",responseList);
+        List<BuildingSearchResponse> responseList = IBuildingService.findAll(buildingSearchRequest, PageRequest.of(buildingSearchRequest.getPage() - 1, buildingSearchRequest.getMaxPageItems()));
+        buildingSearchRequest.setListResult(responseList);
+        buildingSearchRequest.setTotalItems(IBuildingService.countTotalItem());
+        nav.addObject("buildingList",buildingSearchRequest);
         nav.addObject("ListStaffs",userService.getStaffs());
         nav.addObject("districts", District.type());
         nav.addObject("typeCodes", TypeCode.type());

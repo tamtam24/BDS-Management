@@ -10,7 +10,9 @@ import com.javaweb.service.IBuildingService;
 import com.javaweb.service.IUserService;
 import com.javaweb.service.impl.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.Map;
@@ -28,8 +30,8 @@ public class BuildingAPI {
 
     //Tim kiem toa nha
     @GetMapping
-    public List<BuildingSearchResponse> getBuilding(BuildingSearchRequest buildingSearchRequest) {
-        List<BuildingSearchResponse> result = IBuildingService.findAll(buildingSearchRequest);
+    public List<BuildingSearchResponse> getBuilding(BuildingSearchRequest buildingSearchRequest, Pageable pageable) {
+        List<BuildingSearchResponse> result = IBuildingService.findAll(buildingSearchRequest,pageable );
         return result;
     }
     //Them hoạc sua toa nha
