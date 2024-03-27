@@ -116,13 +116,13 @@ public class BuildingService implements IBuildingService {
         BuildingEntity existingBuilding;
         if (buildingDTO.getId() != null) {
             existingBuilding = buildingRepository.findById(buildingDTO.getId()).get();
-        } else {
-            existingBuilding = new BuildingEntity();
+            updatedOrNewBuilding.setImage(existingBuilding.getImage());
+            updatedOrNewBuilding.setUserEntities(existingBuilding.getUserEntities());
         }
         saveThumbnail(buildingDTO, updatedOrNewBuilding);
 
-        existingBuilding = buildingDTOConverter.entityToEntity(existingBuilding, updatedOrNewBuilding);
-        buildingRepository.save(existingBuilding);
+//        existingBuilding = buildingDTOConverter.entityToEntity(existingBuilding, updatedOrNewBuilding);
+        buildingRepository.save(updatedOrNewBuilding);
         System.out.println("oke here");
 //        rentAreaRepository.deleteByBuildingId(existingBuilding.getId());
 
