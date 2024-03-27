@@ -96,15 +96,16 @@ public class BuildingService implements IBuildingService {
     }
 
     @Override
+    @Transactional
     public void deleteBuildings(List<Long> ids) {
-        for (Long id : ids) {
+
 
 //            buildingRepository.deleteRentAreaByBuildingId(id);
 //            buildingRepository.deleteAssignmentByBuildingId(id);
-            buildingRepository.deleteById(id);
+            buildingRepository.deleteByIdIn(ids);
 
 
-        }
+
 
     }
 
@@ -122,6 +123,7 @@ public class BuildingService implements IBuildingService {
 
         existingBuilding = buildingDTOConverter.entityToEntity(existingBuilding, updatedOrNewBuilding);
         buildingRepository.save(existingBuilding);
+        System.out.println("oke here");
 //        rentAreaRepository.deleteByBuildingId(existingBuilding.getId());
 
 

@@ -90,10 +90,11 @@ public class BuildingDTOConverter {
 
         oldBuilding = modelMapper.map(newBuilding,oldBuilding.getClass());
         oldBuilding.removeRentArea(oldBuilding.getItems());
-        for (RentAreaEntity rentAreaEntity : oldBuilding.getItems()) {
-            rentAreaEntity.setBuilding(oldBuilding);
-            System.out.println("luu rentArea oke");
-        }
+//        for (RentAreaEntity rentAreaEntity : oldBuilding.getItems()) {
+//            rentAreaEntity.setBuilding(oldBuilding);
+//            System.out.println("luu rentArea oke");
+//        }
+        oldBuilding.setItems(newBuilding.getItems());
 
         return oldBuilding;
     }
